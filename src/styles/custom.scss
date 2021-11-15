@@ -1,0 +1,15 @@
+// importa tipografía desde google fonts
+@import url("https://fonts.googleapis.com/css?family=PT+Sans");
+
+// asigna la tipografía por defecto
+$font-family-sans-serif: "PT Sans", sans-serif;
+
+// modifica los colores por defecto
+$body-bg: #ecd6c0;
+$body-color: #111;
+$primary:#a68069;
+$secondary: #ecd6c0;
+$success: #bf9780;
+$info:#a68069;
+$warning:#c79c79;
+$danger:#ee0a0a;
