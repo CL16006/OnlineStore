@@ -1,7 +1,7 @@
 <template>
   <b-container fluid>
     <b-row>
-      <b-col col="2">
+      <b-col cols="3">
         <br />
         <sidebar></sidebar>
       </b-col>
@@ -132,9 +132,10 @@
                 <label class="mx-3" for="seleccionar">Articulos por pagina</label>
               <b-form-select
                 id="seleccionar"
-                class="mx-2"
+                class="mt-3"
                 v-model="selected"
                 :options="options"
+                size="sm" @change="seleccionar()"
               ></b-form-select>
                </b-input-group>
               </div>
@@ -170,7 +171,12 @@ export default {
       perPage: 3,
       currentPage: 1,
       selected: null,
-      options: [10, 15, 20],
+      options: [
+          { value: null, text: 'Por favor seleccione una opcion' },
+          { value: 10, text: '10 articulos' },
+          { value: 15, text: '15 articulos' },
+          { value: 20, text: '20 articulos' }
+        ],
     };
   },
   firestore: {
@@ -254,6 +260,11 @@ export default {
       this.precioMenor = "";
       this.precioMayor = "";
     },
+    seleccionar: function(){
+      console.log("selecionado"+this.selected)
+      this.perPage=this.selected;
+      console.log("Por page"+this.perPage)
+    }
   },
   created() {
     eventBus.$on("buscarEvent", function (data) {
