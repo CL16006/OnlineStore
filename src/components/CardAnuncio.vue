@@ -97,9 +97,10 @@
           </b-row>
 
           <b-row>
-            <b-col v-for="(anuncio, key) in anuncios" :key="key" cols="4">
+            <b-col v-for="(anuncio, key) in shownCards" :key="key" cols="4" :per-page="perPage" :current-page="currentPage">
               <br />
-              <b-card id="my-card"
+              <b-card
+                id="my-card"
                 title=""
                 img-src="https://picsum.photos/600/300/?image=25"
                 img-alt="Image"
@@ -115,32 +116,34 @@
                   {{ anuncio.celular.rom }}, RAM de {{ anuncio.celular.ram }}
                 </b-card-text>
 
-                <b-button href="/anuncio" variant="primary">Ver Mas</b-button>
+                <b-button href="/verAnuncio" variant="primary"
+                  >Ver Mas</b-button
+                >
               </b-card>
             </b-col>
 
-            
-              <br /><br />
-              <div class="overflow-auto">
-                <b-input-group>
+            <br /><br />
+            <div class="overflow-auto">
+              <b-input-group>
                 <b-pagination
                   v-model="currentPage"
                   :total-rows="rows"
                   :per-page="perPage"
-                  aria-controls="my-card"
+                  aria-controls="my-table"
                 ></b-pagination>
-                <label class="mx-3" for="seleccionar">Articulos por pagina</label>
-              <b-form-select
-                id="seleccionar"
-                class="mt-3"
-                v-model="selected"
-                :options="options"
-                size="sm" @change="seleccionar()"
-              ></b-form-select>
-               </b-input-group>
-              </div>
-              
-           
+                <label class="mx-3" for="seleccionar"
+                  >Articulos por pagina</label
+                >
+                <b-form-select
+                  id="seleccionar"
+                  class="mt-3 bg-success"
+                  v-model="selected"
+                  :options="options"
+                  size="md"
+                  @change="seleccionar()"
+                ></b-form-select>
+              </b-input-group>
+            </div>
           </b-row>
           <br /><br /><br />
         </b-container>
@@ -172,11 +175,11 @@ export default {
       currentPage: 1,
       selected: null,
       options: [
-          { value: null, text: 'Por favor seleccione una opcion' },
-          { value: 10, text: '10 articulos' },
-          { value: 15, text: '15 articulos' },
-          { value: 20, text: '20 articulos' }
-        ],
+        { value: null, text: "Por favor seleccione una opcion" },
+        { value: 6, text: "6 articulos" },
+        { value: 12, text: "12 articulos" },
+        { value: 18, text: "18 articulos" },
+      ],
     };
   },
   firestore: {
@@ -260,11 +263,11 @@ export default {
       this.precioMenor = "";
       this.precioMayor = "";
     },
-    seleccionar: function(){
-      console.log("selecionado"+this.selected)
-      this.perPage=this.selected;
-      console.log("Por page"+this.perPage)
-    }
+    seleccionar: function () {
+      
+      this.perPage = this.selected;
+     
+    },
   },
   created() {
     eventBus.$on("buscarEvent", function (data) {
@@ -272,9 +275,12 @@ export default {
     });
   },
   computed: {
-      rows() {
-        return this.anuncios.length
-      }
+    rows() {
+      return this.anuncios.length;
+    },
+    shownCards () { 
+      return this.anuncios.slice((this.currentPage - 1) * this.perPage, this.currentPage * this.perPage);
+    }
   },
 };
 </script>

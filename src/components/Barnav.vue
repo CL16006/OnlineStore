@@ -18,7 +18,7 @@
         </b-button>       
         <b-button variant="primary" href="/carrito" class="d-none d-lg-block d-xl-block d-sm-none d-md-none">
         <b-icon icon="cart-plus-fill" aria-hidden="true" font-scale="2"></b-icon>Carrito
-        <b-badge variant="danger">+4</b-badge></b-button>      
+        <b-badge variant="light">+4</b-badge></b-button>      
     </b-navbar-nav>
     
     <!--Se muestra unicamente en movil-->

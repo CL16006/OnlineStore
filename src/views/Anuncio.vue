@@ -1,3 +1,14 @@
 <template>
-    <h1>Anuncio</h1>
+    <nuevo-anuncio></nuevo-anuncio>
 </template>
+
+<script>
+import NuevoAnuncio from '../components/NuevoAnuncio.vue'
+
+export default {
+  name: 'Anuncio',
+  components: {
+    NuevoAnuncio,
+  }
+}
+</script>
