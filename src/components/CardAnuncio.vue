@@ -58,42 +58,7 @@
             </b-col>
           </b-row>
           <b-row>
-            <b-col cols="7">
-              <br />
-              <div class="input-group">
-                <b-input-group-prepend is-text>
-                  <b-icon icon="search"></b-icon>
-                </b-input-group-prepend>
-                <b-form-input
-                  @keyup="buscarAnuncio()"
-                  size="sm"
-                  v-model="buscar"
-                  class="
-                    d-none d-lg-block d-xl-block d-sm-none d-md-none
-                    bg-light
-                  "
-                  placeholder="Buscar marca"
-                >
-                </b-form-input>
-                <b-button
-                  size="sm"
-                  @click="buscarAnuncio()"
-                  class="mx-1 d-none d-lg-block d-xl-block d-sm-none d-md-none"
-                  type="submit"
-                  variant="dark"
-                  >Buscar</b-button
-                >
-                <b-button
-                  size="sm"
-                  @click="limpiar()"
-                  class="mx-1 d-none d-lg-block d-xl-block d-sm-none d-md-none"
-                  type="submit"
-                  variant="dark"
-                  >Limpiar</b-button
-                >
-              </div>
-              <br />
-            </b-col>
+       
           </b-row>
 
           <b-row>
@@ -136,7 +101,7 @@
                 >
                 <b-form-select
                   id="seleccionar"
-                  class="mt-3 bg-success"
+                  class="mt-3 bg-light"
                   v-model="selected"
                   :options="options"
                   size="md"
@@ -269,10 +234,17 @@ export default {
      
     },
   },
-  created() {
-    eventBus.$on("buscarEvent", function (data) {
-      this.anuncios = data;
+  mounted(){
+    
+    eventBus.$on("filtrarAnuncio",(data)=>{
+     this.buscar=data
+     this.buscarAnuncio()
     });
+
+    eventBus.$on("limpiarBuscar",()=>{
+      this.limpiar();
+    });
+
   },
   computed: {
     rows() {
@@ -282,6 +254,7 @@ export default {
       return this.anuncios.slice((this.currentPage - 1) * this.perPage, this.currentPage * this.perPage);
     }
   },
+  
 };
 </script>
 

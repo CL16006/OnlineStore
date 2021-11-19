@@ -140,7 +140,7 @@ export default {
     guardarAnuncio: function () {
       var prc=parseInt(this.dprecio)
       var hoy=new Date()
-      
+      if(this.dmarca!='' & this.dmodelo!='' & this.dnuevo!='' & this.dpantalla!='' & this.dram!='' & this.dsistema!='' & this.dtelefono!='' & this.dtitulo!='' & this.dvendedor!=''){
       db.collection("anuncios").add({
         descripcion: this.ddescripcion,
         celular: {
@@ -159,6 +159,10 @@ export default {
         vendedor: this.dvendedor,
       });
       this.limpiar();
+      }else{
+        //console.log('no se pudo realizar la operacion porque alguno de los campos esta vacio');
+        window.alert("no se pudo realizar la operacion porque alguno de los campos esta vacio");
+      }
       
     },
     nuevoTrue: function () {
