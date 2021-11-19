@@ -1,32 +1,31 @@
 <template>
   <b-navbar toggleable="sm" type="dark" variant="dark">
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-    <b-navbar-brand href="/">
+    <b-navbar-brand class="d-none d-lg-block d-xl-block d-sm-none d-md-none" href="/">
       <b-icon icon="phone-fill" aria-hidden="true" font-scale="2"></b-icon>
       Tienda Cellphone
     </b-navbar-brand>
 
-    <b-navbar-nav>
-      <b-row class="align-items-center ">
-        <b-col>
+    <b-navbar-nav  class="ml-auto">
+      <b-nav-form class="d-flex">
       <b-form-input
         @keyup="filtrar()"
         size="sm"
         v-model="buscar"
-        class="d-none d-lg-block d-xl-block d-sm-none d-md-none bg-light"
+        class="mr-sm-2 bg-light"
         placeholder="Buscar"
       >
-      </b-form-input></b-col>
-      <b-col>
+      </b-form-input>
+      
       <b-button
         size="sm"
         @click="limpiar()"
-        class="d-none d-lg-block d-xl-block d-sm-none d-md-none"
+        class="my-2 my-sm-0 d-none d-lg-block d-xl-block d-sm-none d-md-none"
         type="submit"
         variant="primary"
         >Limpiar</b-button>
-      </b-col>
-      <b-col>
+      </b-nav-form>
+      <b-button-group>
       <b-button
         variant="primary"
         href="/"
@@ -34,8 +33,8 @@
       >
         <b-icon icon="house-fill" aria-hidden="true" font-scale="2"></b-icon
         >Inicio
-      </b-button></b-col>
-      <b-col cols="3">
+      </b-button>
+      
       <b-button
         variant="primary"
         href="/estadisticas"
@@ -43,8 +42,8 @@
       >
         <b-icon icon="graph-up" aria-hidden="true" font-scale="2"></b-icon
         >Estadisticas
-      </b-button></b-col>
-      <b-col cols="3">
+      </b-button>
+      
       <b-button
         variant="primary"
         href="/anuncio"
@@ -55,19 +54,19 @@
           aria-hidden="true"
           font-scale="2"
         ></b-icon
-        >Nuevo Anuncio
-      </b-button></b-col>
-      <b-col cols="3">
+        >
+      </b-button>
+      
       <b-button
         variant="primary"
         href="/carrito"
         class="d-none d-lg-block d-xl-block d-sm-none d-md-none"
       >
         <b-icon icon="cart-plus-fill" aria-hidden="true" font-scale="2"></b-icon
-        >Carrito <b-badge variant="light">+4</b-badge></b-button
+        > <b-badge variant="light">+4</b-badge></b-button
       >
-      </b-col>
-      </b-row>
+       </b-button-group>
+      
     </b-navbar-nav>
 
     <!--Se muestra unicamente en movil-->
