@@ -61,6 +61,7 @@
           <b-form-input id="ram" v-model="dram" placeholder="RAM"></b-form-input
           ><br />
         </div>
+       
         <br /><br />
       </b-col>
       <b-col cols="6" class="bg-dark text-light">
@@ -91,14 +92,32 @@
           placeholder="Ingrese una breve descripcionb..."
           rows="3"
           max-rows="6"
-        ></b-form-textarea><br>
+        ></b-form-textarea
+        ><br />
         <label for="precio">Precio: </label>
-        <b-form-input id="precio" v-model="dprecio" placeholder="$"></b-form-input><br>
+        <b-form-input
+          id="precio"
+          v-model="dprecio"
+          placeholder="$"
+        ></b-form-input
+        ><br />
         <b-button variant="danger" href="/">Cancelar</b-button>
-        <b-button @click="guardarAnuncio();toast('b-toaster-bottom-center', true)" variant="success">Guardar</b-button>
-        <b-toast id="example-toast" title="Anuncio se guardo" static no-auto-hide>
-        Anuncio guardado satisfactoriamente!
-       </b-toast>
+        <b-button
+          @click="
+            guardarAnuncio();
+            toast('b-toaster-bottom-center', true);
+          "
+          variant="success"
+          >Guardar</b-button
+        >
+        <b-toast
+          id="example-toast"
+          title="Anuncio se guardo"
+          static
+          no-auto-hide
+        >
+          Anuncio guardado satisfactoriamente!
+        </b-toast>
       </b-col>
     </b-row>
     <br /><br />
@@ -108,12 +127,19 @@
 <script>
 import { db } from "../db";
 
-
 export default {
   name: "NuevoAnuncio",
   components: {},
   data: function () {
     return {
+      progressUpload: 0,
+      file: null,
+      fileName:'',
+      uploadTask:'',
+      uploading:false,
+      downloadURL:'',
+      archivos:[],
+      uploadEnd:false,
       ddescripcion: "",
       dfecha: null,
       dtelefono: "",
@@ -132,38 +158,52 @@ export default {
         { value: "iOS", text: "iOS" },
         { value: "Android", text: "Android" },
         { value: "HarmonyOs", text: "HarmonyOs" },
-        {value:"EMUI 8.2 (Basado en Android O)",text:"EMUI 8.2 (Basado en Android O)"},
+        {
+          value: "EMUI 8.2 (Basado en Android O)",
+          text: "EMUI 8.2 (Basado en Android O)",
+        },
       ],
     };
   },
   methods: {
     guardarAnuncio: function () {
-      var prc=parseInt(this.dprecio)
-      var hoy=new Date()
-      if(this.dmarca!='' & this.dmodelo!='' & this.dnuevo!='' & this.dpantalla!='' & this.dram!='' & this.dsistema!='' & this.dtelefono!='' & this.dtitulo!='' & this.dvendedor!=''){
-      db.collection("anuncios").add({
-        descripcion: this.ddescripcion,
-        celular: {
-          marca: this.dmarca,
-          modelo: this.dmodelo,
-          nuevo: this.dnuevo,
-          pantalla: this.dpantalla,
-          ram: this.dram,
-          rom: this.drom,
-          sistema: this.dsistema,
-        },
-        fecha: hoy,
-        precio: prc,
-        telefono: this.dtelefono,
-        titulo: this.dtitulo,
-        vendedor: this.dvendedor,
-      });
-      this.limpiar();
-      }else{
+      var prc = parseInt(this.dprecio);
+      var hoy = new Date();
+      if (
+        (this.dmarca != "") &
+        (this.dmodelo != "") &
+        (this.dnuevo != "") &
+        (this.dpantalla != "") &
+        (this.dram != "") &
+        (this.dsistema != "") &
+        (this.dtelefono != "") &
+        (this.dtitulo != "") &
+        (this.dvendedor != "")
+      ) {
+        db.collection("anuncios").add({
+          descripcion: this.ddescripcion,
+          celular: {
+            marca: this.dmarca,
+            modelo: this.dmodelo,
+            nuevo: this.dnuevo,
+            pantalla: this.dpantalla,
+            ram: this.dram,
+            rom: this.drom,
+            sistema: this.dsistema,
+          },
+          fecha: hoy,
+          precio: prc,
+          telefono: this.dtelefono,
+          titulo: this.dtitulo,
+          vendedor: this.dvendedor,
+        });
+        this.limpiar();
+      } else {
         //console.log('no se pudo realizar la operacion porque alguno de los campos esta vacio');
-        window.alert("no se pudo realizar la operacion porque alguno de los campos esta vacio");
+        window.alert(
+          "no se pudo realizar la operacion porque alguno de los campos esta vacio"
+        );
       }
-      
     },
     nuevoTrue: function () {
       console.log(this.dfecha);
@@ -175,32 +215,34 @@ export default {
       this.dnuevo = false;
       console.log(this.dnuevo);
     },
-    limpiar:function(){
-      this.ddescripcion= "";
-      this.dfecha= '';
-      this.dtelefono="";
-      this.dtitulo="";
-      this.dvendedor= "";
-      this.dprecio= "";
-      this.dnuevo= null;
-      this.dmarca= "";
-      this.dmodelo= "";
-      this.dpantalla= "";
-      this.dram= "";
-      this.drom= "";
-      this.dsistema= null;
+    limpiar: function () {
+      this.ddescripcion = "";
+      this.dfecha = "";
+      this.dtelefono = "";
+      this.dtitulo = "";
+      this.dvendedor = "";
+      this.dprecio = "";
+      this.dnuevo = null;
+      this.dmarca = "";
+      this.dmodelo = "";
+      this.dpantalla = "";
+      this.dram = "";
+      this.drom = "";
+      this.dsistema = null;
     },
-     toast(toaster, append = false) {
-        this.counter++
-        this.$bvToast.toast(`Toast ${this.counter} body content`, {
-          title: `Toaster ${toaster}`,
-          toaster: toaster,
-          solid: true,
-          appendToast: append
-        })
-      }
-    
+    toast(toaster, append = false) {
+      this.counter++;
+      this.$bvToast.toast(`Toast ${this.counter} body content`, {
+        title: `Toaster ${toaster}`,
+        toaster: toaster,
+        solid: true,
+        appendToast: append,
+      });
+    },
   },
+  created(){
+    
+  }
 };
 </script>
 

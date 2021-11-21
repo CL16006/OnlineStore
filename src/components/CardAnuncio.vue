@@ -57,17 +57,21 @@
               <br />
             </b-col>
           </b-row>
-          <b-row>
-       
-          </b-row>
+          <b-row> </b-row>
 
           <b-row>
-            <b-col v-for="(anuncio, key) in shownCards" :key="key" cols="4" :per-page="perPage" :current-page="currentPage">
+            <b-col
+              v-for="(anuncio, key) in shownCards"
+              :key="key"
+              cols="4"
+              :per-page="perPage"
+              :current-page="currentPage"
+            >
               <br />
               <b-card
                 id="my-card"
                 title=""
-                img-src="https://picsum.photos/600/300/?image=25"
+                img-src="https://firebasestorage.googleapis.com/v0/b/proyecto-final-fpi.appspot.com/o/IDanuncio%2Fpexels-mart-production-9558700.jpg?alt=media&token=4662ca55-cfa9-4797-941e-500cef68b45a"
                 img-alt="Image"
                 img-top
                 tag="article"
@@ -229,13 +233,74 @@ export default {
       this.precioMayor = "";
     },
     seleccionar: function () {
-      
+
       this.perPage = this.selected;
-     
+
     },
+    filtrarPorNuevo: function (data) {
+     // console.log("filtrando por nuevo");
+      if (this.anunciosOriginal.length == 0) {
+        this.anunciosOriginal = this.anuncios.slice();
+      } else {
+        this.anuncios = this.anunciosOriginal.slice();
+      }
+      this.anuncios = this.anuncios.filter(
+        (anuncio) => anuncio.celular.nuevo >= data
+      );
+    },
+    filtrarVarios: function (data) {
+     // console.log("filtrando por nuevo");
+     var pantallas=data.pantallas
+     var marcas=data.marcas
+     var sistemas=data.sistemas
+     //var filtrado=[]
+
+      if (this.anunciosOriginal.length == 0) {
+        this.anunciosOriginal = this.anuncios.slice();
+      } else {
+        this.anuncios = this.anunciosOriginal.slice();
+      }
+      
+      if(pantallas.length>0){
+        //console.log("filtrando pantallas")
+      //recorriendo el array pantallas
+       pantallas.forEach((element)=> {
+         //console.log(element)
+         this.anuncios=this.anuncios.filter((anuncio)=>{
+           return anuncio.celular.pantalla==element
+         })
+       })
+
+      }
+
+      if(marcas.length>0){
+        // console.log("filtrando marcas")
+         //recorriendo el array marcas
+       marcas.forEach((element)=> {
+         console.log(element)
+         this.anuncios=this.anuncios.filter((anuncio)=>{
+           return anuncio.celular.marca==element
+         })
+       })
+         
+      }
+      if(sistemas.length>0){
+        // console.log("filtrando sistemas")
+         //recorriendo el array sistemas
+       sistemas.forEach((element)=> {
+         console.log(element)
+         this.anuncios=this.anuncios.filter((anuncio)=>{
+           return anuncio.celular.sistema==element
+         })
+       })
+         
+      }
+
+    },
+
   },
   mounted(){
-    
+
     eventBus.$on("filtrarAnuncio",(data)=>{
      this.buscar=data
      this.buscarAnuncio()
@@ -245,16 +310,28 @@ export default {
       this.limpiar();
     });
 
+    eventBus.$on("filtrar",(data)=>{
+      //filtrando los anuncios
+      //console.log(data)
+      this.filtrarVarios(data)
+    })
+
+    eventBus.$on("filtrarNuevo",(data)=>{
+      //filtrando por nuevos
+      console.log(data)
+      this.filtrarPorNuevo(data)
+    })
+
   },
   computed: {
     rows() {
       return this.anuncios.length;
     },
-    shownCards () { 
+    shownCards () {
       return this.anuncios.slice((this.currentPage - 1) * this.perPage, this.currentPage * this.perPage);
     }
   },
-  
+
 };
 </script>
 

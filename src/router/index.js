@@ -30,7 +30,7 @@ const routes = [
     component: Carrito
   },
   {
-    path:'/verAnuncio',
+    path:'/verAnuncio/{id}',
     name:'verAnuncio',
     component: About
   }

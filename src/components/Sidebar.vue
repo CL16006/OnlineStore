@@ -61,15 +61,15 @@ export default {
         selectedSistema:[],
         selectedPantalla:[],
         marcas:[{ text: 'iphone', value: 'iphone' },
-          { text: 'Samsung', value: 'Samsung' },
-          { text: 'Xiaomi', value: 'Xiaomi' },
-          { text: 'Nokia', value: 'Nokia' },
-          { text: 'Huawei', value: 'Huawei' }
+          { text: 'Samsung', value: 'samsung' },
+          { text: 'Xiaomi', value: 'xiaomi' },
+          { text: 'Nokia', value: 'nokia' },
+          { text: 'Huawei', value: 'huawei' }
           ],
         sistemas:[{ text: 'iOS', value: 'iOS' },
-          { text: 'Android', value: 'Android' },
-          { text: 'EMUI 8.2', value: 'EMUI 8.2' },
-          { text: 'HarmonyOs', value: 'HarmonyOs' }
+          { text: 'Android', value: 'android' },
+          { text: 'EMUI 8.2', value: 'emui 8.2' },
+          { text: 'HarmonyOs', value: 'harmonyOs' }
           ],
         pantallas:[{text:'5.5 pulgadas',value:'5.5 pulgadas'},
         {text:'6 pulgadas',value:'6 pulgadas'},
@@ -88,14 +88,14 @@ export default {
           x.marcas=this.selectedMarca
         }
         if(this.selectedPantalla.length>0){
-          x.pantallas=this.selectedPantallab
+          x.pantallas=this.selectedPantalla
         }
         eventBus.$emit("filtrar", x);
    
       },
       filtrarNuevo(){
       eventBus.$emit("filtrarNuevo",this.nuevo);
-      console.log('filtrando nuevoS')
+     // console.log('filtrando nuevoS')
       }
     }
     
