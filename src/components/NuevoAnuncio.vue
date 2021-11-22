@@ -59,12 +59,13 @@
           ><br />
           <label for="ram">RAM: </label>
           <b-form-input id="ram" v-model="dram" placeholder="RAM"></b-form-input
-          ><br />
+          >
         </div>
-       
+
         <br /><br />
       </b-col>
       <b-col cols="6" class="bg-dark text-light">
+        <br /><br /><br /><br /><br/><br/>
         <label for="titulo">Titulo breve del anuncio: </label>
         <b-form-input
           id="titulo"
@@ -79,17 +80,18 @@
           placeholder="Vendedor"
         ></b-form-input
         ><br />
-        <label for="telefono">Telefono: </label>
+        <label for="telefono">Telefono </label>
         <b-form-input
           id="telefono"
           v-model="dtelefono"
-          placeholder="Telefono"
-        ></b-form-input
-        ><br />
+          :state="telState"
+          placeholder="9999-9999"
+        ></b-form-input><br />
+        <label for="textarea">Descripción: </label>
         <b-form-textarea
           id="textarea"
           v-model="ddescripcion"
-          placeholder="Ingrese una breve descripcionb..."
+          placeholder="Ingrese una breve descripcion..."
           rows="3"
           max-rows="6"
         ></b-form-textarea
@@ -99,54 +101,81 @@
           id="precio"
           v-model="dprecio"
           placeholder="$"
-        ></b-form-input
-        ><br />
-        <b-button variant="danger" href="/">Cancelar</b-button>
+        ></b-form-input>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col cols="5" class="bg-dark text-light">
+        <!--Manejo de las imagenes-->
+        <div>
+          <h5>Imagen</h5>
+          <b-form-file
+            id="file"
+            @change="previzualizar()"
+            v-model="file"
+            :state="Boolean(file)"
+            placeholder="Choose a file or drop it here..."
+            drop-placeholder="Drop file here..."
+          ></b-form-file>
+          <p>**Si no carga la previzualizacion de la imagen intenta eligiendo la imagen nuevamente.**</p>
+        </div>
+        <br /><br />
+      </b-col>
+      <b-col cols="6" class="bg-dark text-light">
+        <p v-show="file==null">Aun no ha cargado una imagen</p><br/>
+         <div id="preview"></div>
+        <div class="bg-success">
+          <b-progress
+            v-show="uploading"
+            :value="value"
+            :max="max"
+            show-progress
+            animated
+          ></b-progress>
+        </div>
+        <br />
+        <b-button variant="danger" href="/"><b-icon icon="file-excel-fill"></b-icon>Cancelar</b-button>
         <b-button
           @click="
             guardarAnuncio();
             toast('b-toaster-bottom-center', true);
           "
-          variant="success"
-          >Guardar</b-button
-        >
-        <b-toast
-          id="example-toast"
-          title="Anuncio se guardo"
-          static
-          no-auto-hide
-        >
-          Anuncio guardado satisfactoriamente!
-        </b-toast>
+          variant="primary"
+          ><b-icon icon="file-plus-fill"></b-icon>Agregar</b-button
+        ><br /><br />
       </b-col>
+      
     </b-row>
     <br /><br />
   </b-container>
 </template>
 
 <script>
-import { db } from "../db";
+import { db, storage } from "../db";
 
 export default {
   name: "NuevoAnuncio",
   components: {},
   data: function () {
     return {
+      max: 100,
+      value: 45,
+      idRef: null,
       progressUpload: 0,
       file: null,
-      fileName:'',
-      uploadTask:'',
-      uploading:false,
-      downloadURL:'',
-      archivos:[],
-      uploadEnd:false,
+      fileName: "",
+      uploadTask: "",
+      uploading: false,
+      downloadURL: "",
+      archivos: [],
+      uploadEnd: false,
       ddescripcion: "",
       dfecha: null,
       dtelefono: "",
       dtitulo: "",
       dvendedor: "",
       dprecio: "",
-      dnuevo: null,
+      dnuevo: false,
       dmarca: "",
       dmodelo: "",
       dpantalla: "",
@@ -166,6 +195,78 @@ export default {
     };
   },
   methods: {
+    previzualizar() {
+      document.getElementById("file").onchange = function (e) {
+        // Creamos el objeto de la clase FileReader
+        let reader = new FileReader();
+
+        // Leemos el archivo subido y se lo pasamos a nuestro fileReader
+        reader.readAsDataURL(e.target.files[0]);
+
+        // Le decimos que cuando este listo ejecute el código interno
+        reader.onload = function () {
+          let preview = document.getElementById("preview"),
+            image = document.createElement("img");
+
+          image.src = reader.result;
+          image.style = "width:100%";
+
+          preview.innerHTML = "";
+          preview.append(image);
+        };
+      };
+    },
+    upload(IDanuncio) {
+      this.fileName = this.file.name;
+      this.uploading = true;
+      var archivo = storage.ref("" + IDanuncio + "/" + this.file.name);
+      archivo
+        .put(this.file)
+        .then(() => {
+          this.uploadEnd = true;
+          archivo.getDownloadURL().then((url) => {
+            this.downloadURL = url;
+            this.uploading = false;
+            this.listarArchivos();
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    listarArchivos() {
+      var this2 = this;
+      var listRef = storage
+        .ref()
+        .child("IDanuncio")
+        .listAll()
+        .then((res) => {
+          res.items.forEach(function (itemsRef) {
+            this2.archivos.push(itemsRef.fullPath);
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      console.log(listRef);
+    },
+    deleteImage() {
+      storage
+        .ref("IDanuncio/" + this.file.name)
+        .delete()
+        .then(() => {
+          this.uploading = false;
+          this.uploadEnd = false;
+          this.downloadURL = "";
+          console.log("la imagen se elimino");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      this.file = null;
+      this.fileName = "";
+    },
     guardarAnuncio: function () {
       var prc = parseInt(this.dprecio);
       var hoy = new Date();
@@ -178,25 +279,35 @@ export default {
         (this.dsistema != "") &
         (this.dtelefono != "") &
         (this.dtitulo != "") &
-        (this.dvendedor != "")
+        (this.dvendedor != "")&
+        (this.file!=null)
       ) {
-        db.collection("anuncios").add({
-          descripcion: this.ddescripcion,
-          celular: {
-            marca: this.dmarca,
-            modelo: this.dmodelo,
-            nuevo: this.dnuevo,
-            pantalla: this.dpantalla,
-            ram: this.dram,
-            rom: this.drom,
-            sistema: this.dsistema,
-          },
-          fecha: hoy,
-          precio: prc,
-          telefono: this.dtelefono,
-          titulo: this.dtitulo,
-          vendedor: this.dvendedor,
-        });
+        db.collection("anuncios")
+          .add({
+            descripcion: this.ddescripcion,
+            celular: {
+              marca: this.dmarca,
+              modelo: this.dmodelo,
+              nuevo: this.dnuevo,
+              pantalla: this.dpantalla,
+              ram: this.dram,
+              rom: this.drom,
+              sistema: this.dsistema,
+            },
+            fecha: hoy,
+            precio: prc,
+            telefono: this.dtelefono,
+            titulo: this.dtitulo,
+            vendedor: this.dvendedor,
+          })
+          .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+            this.upload(docRef.id);
+          })
+          .catch((error) => {
+            console.log("Error agregando el documento" + error);
+          });
+
         this.limpiar();
       } else {
         //console.log('no se pudo realizar la operacion porque alguno de los campos esta vacio');
@@ -229,6 +340,7 @@ export default {
       this.dram = "";
       this.drom = "";
       this.dsistema = null;
+      this.file=null;
     },
     toast(toaster, append = false) {
       this.counter++;
@@ -240,8 +352,13 @@ export default {
       });
     },
   },
-  created(){
-    
+  created() {
+    this.listarArchivos();
+  },
+  computed:{
+    telState() {
+        return /^[0-9]{4}-[0-9]{4}/.test(this.dtelefono) ? true : false
+      }
   }
 };
 </script>
