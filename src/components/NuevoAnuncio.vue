@@ -123,7 +123,7 @@
       </b-col>
       <b-col cols="6" class="bg-dark text-light">
         <p v-show="file==null">Aun no ha cargado una imagen</p><br/>
-         <div id="preview"></div>
+         <div v-show="file!=null" id="preview"></div>
         <div class="bg-success">
           <b-progress
             v-show="uploading"
@@ -137,8 +137,7 @@
         <b-button variant="danger" href="/"><b-icon icon="file-excel-fill"></b-icon>Cancelar</b-button>
         <b-button
           @click="
-            guardarAnuncio();
-            toast('b-toaster-bottom-center', true);
+            guardarAnuncio()
           "
           variant="primary"
           ><b-icon icon="file-plus-fill"></b-icon>Agregar</b-button
@@ -219,7 +218,7 @@ export default {
     upload(IDanuncio) {
       this.fileName = this.file.name;
       this.uploading = true;
-      var archivo = storage.ref("" + IDanuncio + "/" + this.file.name);
+      var archivo = storage.ref("" + IDanuncio + "/" + IDanuncio);
       archivo
         .put(this.file)
         .then(() => {
@@ -228,6 +227,7 @@ export default {
             this.downloadURL = url;
             this.uploading = false;
             this.listarArchivos();
+            this.file=null;
           });
         })
         .catch((error) => {
@@ -273,7 +273,6 @@ export default {
       if (
         (this.dmarca != "") &
         (this.dmodelo != "") &
-        (this.dnuevo != "") &
         (this.dpantalla != "") &
         (this.dram != "") &
         (this.dsistema != "") &
@@ -340,7 +339,7 @@ export default {
       this.dram = "";
       this.drom = "";
       this.dsistema = null;
-      this.file=null;
+     // this.file=null;
     },
     toast(toaster, append = false) {
       this.counter++;
