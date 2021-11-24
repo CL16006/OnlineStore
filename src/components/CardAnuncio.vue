@@ -61,13 +61,12 @@
           <b-row> </b-row>
 
           <b-row>
-            <b-col v-for="(anuncio, key) in anuncios"
+            <b-col v-for="(anuncio, key) in shownCards"
               :key="key"
               cols="4"
               :per-page="perPage"
-              :current-page="currentPage" class="d-inline">
+              :current-page="currentPage">
             <br>
-              <div>
                 <b-card
                   title=""
                   :img-src="anuncio.urlImagen"
@@ -87,13 +86,9 @@
 
                   <b-button href="#" variant="primary">Ver Más</b-button>
                 </b-card>
-              </div>
-              
             </b-col>
-
             <br /><br />
             <div class="overflow-auto">
-              <br />
               <b-input-group>
                 <b-pagination
                   v-model="currentPage"
