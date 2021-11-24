@@ -58,14 +58,17 @@
           ></b-form-input
           ><br />
           <label for="ram">RAM: </label>
-          <b-form-input id="ram" v-model="dram" placeholder="RAM"></b-form-input
-          >
+          <b-form-input
+            id="ram"
+            v-model="dram"
+            placeholder="RAM"
+          ></b-form-input>
         </div>
 
         <br /><br />
       </b-col>
       <b-col cols="6" class="bg-dark text-light">
-        <br /><br /><br /><br /><br/><br/>
+        <br /><br /><br /><br /><br /><br />
         <label for="titulo">Titulo breve del anuncio: </label>
         <b-form-input
           id="titulo"
@@ -86,7 +89,8 @@
           v-model="dtelefono"
           :state="telState"
           placeholder="9999-9999"
-        ></b-form-input><br />
+        ></b-form-input
+        ><br />
         <label for="textarea">Descripción: </label>
         <b-form-textarea
           id="textarea"
@@ -117,13 +121,17 @@
             placeholder="Choose a file or drop it here..."
             drop-placeholder="Drop file here..."
           ></b-form-file>
-          <p>**Si no carga la previzualizacion de la imagen intenta eligiendo la imagen nuevamente.**</p>
+          <p>
+            **Si no carga la previzualizacion de la imagen intenta eligiendo la
+            imagen nuevamente.**
+          </p>
         </div>
         <br /><br />
       </b-col>
       <b-col cols="6" class="bg-dark text-light">
-        <p v-show="file==null">Aun no ha cargado una imagen</p><br/>
-         <div v-show="file!=null" id="preview"></div>
+        <p v-show="file == null">Aun no ha cargado una imagen</p>
+        <br />
+        <div v-show="file != null" id="preview"></div>
         <div class="bg-success">
           <b-progress
             v-show="uploading"
@@ -134,16 +142,13 @@
           ></b-progress>
         </div>
         <br />
-        <b-button variant="danger" href="/"><b-icon icon="file-excel-fill"></b-icon>Cancelar</b-button>
-        <b-button
-          @click="
-            guardarAnuncio()
-          "
-          variant="primary"
+        <b-button variant="danger" href="/"
+          ><b-icon icon="file-excel-fill"></b-icon>Cancelar</b-button
+        >
+        <b-button @click="guardarAnuncio()" variant="primary"
           ><b-icon icon="file-plus-fill"></b-icon>Agregar</b-button
         ><br /><br />
       </b-col>
-      
     </b-row>
     <br /><br />
   </b-container>
@@ -181,15 +186,12 @@ export default {
       dram: "",
       drom: "",
       dsistema: null,
+      urlImagen: "",
       sistemaOperativos: [
         { value: null, text: "Por favor seleccione una opcion" },
         { value: "iOS", text: "iOS" },
         { value: "Android", text: "Android" },
         { value: "HarmonyOs", text: "HarmonyOs" },
-        {
-          value: "EMUI 8.2 (Basado en Android O)",
-          text: "EMUI 8.2 (Basado en Android O)",
-        },
       ],
     };
   },
@@ -225,9 +227,10 @@ export default {
           this.uploadEnd = true;
           archivo.getDownloadURL().then((url) => {
             this.downloadURL = url;
+            this.urlImagen = url;
             this.uploading = false;
             this.listarArchivos();
-            this.file=null;
+            this.file = null;
           });
         })
         .catch((error) => {
@@ -253,7 +256,7 @@ export default {
     },
     deleteImage() {
       storage
-        .ref("IDanuncio/" + this.file.name)
+        .ref(this.file.name + "/" + this.file.name)
         .delete()
         .then(() => {
           this.uploading = false;
@@ -266,10 +269,23 @@ export default {
         });
       this.file = null;
       this.fileName = "";
+
     },
     guardarAnuncio: function () {
       var prc = parseInt(this.dprecio);
       var hoy = new Date();
+      var descripcion = this.ddescripcion;
+      var marca = this.dmarca;
+      var modelo = this.dmodelo;
+      var nuevo = this.dnuevo;
+      var pantalla = this.dpantalla;
+      var ram = this.dram;
+      var rom = this.drom;
+      var sistema = this.dsistema;
+      var telefono = this.dtelefono;
+      var titulo = this.dtitulo;
+      var vendedor = this.dvendedor;
+
       if (
         (this.dmarca != "") &
         (this.dmodelo != "") &
@@ -278,9 +294,10 @@ export default {
         (this.dsistema != "") &
         (this.dtelefono != "") &
         (this.dtitulo != "") &
-        (this.dvendedor != "")&
-        (this.file!=null)
+        (this.dvendedor != "") &
+        (this.file != null)
       ) {
+        //agregar documento al firestore
         db.collection("anuncios")
           .add({
             descripcion: this.ddescripcion,
@@ -298,10 +315,58 @@ export default {
             telefono: this.dtelefono,
             titulo: this.dtitulo,
             vendedor: this.dvendedor,
+            urlImagen: this.urlImagen,
           })
           .then((docRef) => {
-            console.log("Document written with ID: ", docRef.id);
-            this.upload(docRef.id);
+            //Cargando la imagen al storage
+            //this.upload(docRef.id);
+            console.log("downloadUrl >>>" + this.downloadURL);
+            console.log("subiendo la imagen");
+            //subiendo la imagen
+            this.fileName = this.file.name;
+            this.uploading = true;
+            var archivo = storage.ref("" + docRef.id + "/" + docRef.id);
+            archivo
+              .put(this.file)
+              .then(() => {
+                this.uploadEnd = true;
+                console.log("se subio la imagen");
+                archivo.getDownloadURL().then((url) => {
+                  this.downloadURL = url;
+                  console.log("downloadUrl >>>" + this.downloadURL);
+                  //Actualizando el documento
+                  console.log("Actualizando el documento con la url");
+                  db.collection("anuncios")
+                    .doc(docRef.id)
+                    .set({
+                      descripcion: descripcion,
+                      celular: {
+                        marca: marca,
+                        modelo: modelo,
+                        nuevo: nuevo,
+                        pantalla: pantalla,
+                        ram: ram,
+                        rom: rom,
+                        sistema: sistema,
+                      },
+                      fecha: hoy,
+                      precio: prc,
+                      telefono: telefono,
+                      titulo: titulo,
+                      vendedor: vendedor,
+                      urlImagen: this.downloadURL,
+                    })
+                    .then(() => {
+                      console.log("se actualizo con la url");
+                    });
+
+                  this.uploading = false;
+                  this.file = null;
+                });
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           })
           .catch((error) => {
             console.log("Error agregando el documento" + error);
@@ -339,7 +404,7 @@ export default {
       this.dram = "";
       this.drom = "";
       this.dsistema = null;
-     // this.file=null;
+      // this.file=null;
     },
     toast(toaster, append = false) {
       this.counter++;
@@ -354,11 +419,11 @@ export default {
   created() {
     this.listarArchivos();
   },
-  computed:{
+  computed: {
     telState() {
-        return /^[0-9]{4}-[0-9]{4}/.test(this.dtelefono) ? true : false
-      }
-  }
+      return /^[0-9]{4}-[0-9]{4}/.test(this.dtelefono) ? true : false;
+    },
+  },
 };
 </script>
 

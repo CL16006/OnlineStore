@@ -29,7 +29,8 @@
                   class="mx-1"
                 ></b-form-input>
                 <b-button variant="warning" @click="limpiar()"
-                  >Limpiar</b-button
+                  ><b-icon icon="trash"></b-icon>
+                  Limpiar</b-button
                 >
               </div>
               <br />
@@ -43,15 +44,15 @@
                   variant="primary"
                   class="mx-1"
                   @click="ordenarPorPrecio()"
-                  >precio
-                  <b-icon icon="arrow-down-up"></b-icon>
+                  >
+                  <b-icon icon="arrow-down-up"></b-icon>Precio
                 </b-button>
                 <b-button
                   variant="primary"
                   class="mx-1"
                   @click="ordenarPorFecha()"
-                  >Fecha
-                  <b-icon icon="arrow-down-up"></b-icon>
+                  >
+                  <b-icon icon="arrow-down-up"></b-icon>Fecha
                 </b-button>
               </b-button-toolbar>
               <br />
@@ -60,39 +61,39 @@
           <b-row> </b-row>
 
           <b-row>
-            <b-col
-              v-for="(anuncio, key) in shownCards"
+            <b-col v-for="(anuncio, key) in anuncios"
               :key="key"
               cols="4"
               :per-page="perPage"
-              :current-page="currentPage"
-            >
-              <br />
-              <b-card
-                id="my-card"
-                title=""
-                img-src="https://firebasestorage.googleapis.com/v0/b/proyecto-final-fpi.appspot.com/o/IDanuncio%2Fpexels-mart-production-9558700.jpg?alt=media&token=4662ca55-cfa9-4797-941e-500cef68b45a"
-                img-alt="Image"
-                img-top
-                tag="article"
-                style="max-width: 20rem"
-                class="mb-2"
-              >
-                <b-card-text>
-                  <h2 class="text-center">${{ anuncio.precio }}</h2>
-                  {{ anuncio.celular.marca }}, {{ anuncio.celular.modelo }},
-                  pantalla de {{ anuncio.celular.pantalla }}, ROM de
-                  {{ anuncio.celular.rom }}, RAM de {{ anuncio.celular.ram }}
-                </b-card-text>
-
-                <b-button href="/verAnuncio" variant="primary"
-                  >Ver Mas</b-button
+              :current-page="currentPage" class="d-inline">
+            <br>
+              <div>
+                <b-card
+                  title=""
+                  :img-src="anuncio.urlImagen"
+                  img-alt="Image"
+                  img-top
+                  tag="article"
+                  style="max-width: 20rem"
+                  class="mb-2"
+                  border-variant="primary"
                 >
-              </b-card>
+                  <b-card-text>
+                   <h2>${{anuncio.precio}}</h2>
+                   {{anuncio.celular.marca}}, {{anuncio.celular.modelo}}, pantalla de {{anuncio.celular.pantalla}}, {{anuncio.celular.rom}} ROM,
+                     {{anuncio.celular.ram}} RAM
+                   
+                  </b-card-text>
+
+                  <b-button href="#" variant="primary">Ver Más</b-button>
+                </b-card>
+              </div>
+              
             </b-col>
 
             <br /><br />
             <div class="overflow-auto">
+              <br />
               <b-input-group>
                 <b-pagination
                   v-model="currentPage"
@@ -122,7 +123,7 @@
 </template>
 
 <script>
-import { db } from "../db";
+import { db, storage } from "../db";
 import { eventBus } from "../main";
 import Sidebar from "./Sidebar.vue";
 
@@ -133,8 +134,11 @@ export default {
   },
   data: function () {
     return {
+      idAnuncio: "",
       buscar: "",
       anuncios: [],
+      imagenes: [],
+      urlimagen: "",
       anunciosOriginal: [],
       precioAsc: true,
       fechaAsc: true,
@@ -146,8 +150,8 @@ export default {
       options: [
         { value: null, text: "Por favor seleccione una opcion" },
         { value: 6, text: "6 articulos" },
-        { value: 12, text: "12 articulos" },
-        { value: 18, text: "18 articulos" },
+        { value: 9, text: "12 articulos" },
+        { value: 12, text: "18 articulos" },
       ],
     };
   },
@@ -233,12 +237,10 @@ export default {
       this.precioMayor = "";
     },
     seleccionar: function () {
-
       this.perPage = this.selected;
-
     },
     filtrarPorNuevo: function (data) {
-     // console.log("filtrando por nuevo");
+      // console.log("filtrando por nuevo");
       if (this.anunciosOriginal.length == 0) {
         this.anunciosOriginal = this.anuncios.slice();
       } else {
@@ -249,89 +251,115 @@ export default {
       );
     },
     filtrarVarios: function (data) {
-     // console.log("filtrando por nuevo");
-     var pantallas=data.pantallas
-     var marcas=data.marcas
-     var sistemas=data.sistemas
-     //var filtrado=[]
+      // console.log("filtrando por nuevo");
+      var pantallas = data.pantallas;
+      var marcas = data.marcas;
+      var sistemas = data.sistemas;
+      //var filtrado=[]
 
       if (this.anunciosOriginal.length == 0) {
         this.anunciosOriginal = this.anuncios.slice();
       } else {
         this.anuncios = this.anunciosOriginal.slice();
       }
-      
-      if(pantallas.length>0){
+
+      if (pantallas.length > 0) {
         //console.log("filtrando pantallas")
-      //recorriendo el array pantallas
-       pantallas.forEach((element)=> {
-         //console.log(element)
-         this.anuncios=this.anuncios.filter((anuncio)=>{
-           return anuncio.celular.pantalla==element
-         })
-       })
-
+        //recorriendo el array pantallas
+        pantallas.forEach((element) => {
+          //console.log(element)
+          this.anuncios = this.anuncios.filter((anuncio) => {
+            return anuncio.celular.pantalla.toLowerCase() == element;
+          });
+        });
       }
 
-      if(marcas.length>0){
+      if (marcas.length > 0) {
         // console.log("filtrando marcas")
-         //recorriendo el array marcas
-       marcas.forEach((element)=> {
-         console.log(element)
-         this.anuncios=this.anuncios.filter((anuncio)=>{
-           return anuncio.celular.marca==element
-         })
-       })
-         
+        //recorriendo el array marcas
+        marcas.forEach((element) => {
+          console.log(element);
+          this.anuncios = this.anuncios.filter((anuncio) => {
+            return anuncio.celular.marca.toLowerCase() == element;
+          });
+        });
       }
-      if(sistemas.length>0){
+      if (sistemas.length > 0) {
         // console.log("filtrando sistemas")
-         //recorriendo el array sistemas
-       sistemas.forEach((element)=> {
-         console.log(element)
-         this.anuncios=this.anuncios.filter((anuncio)=>{
-           return anuncio.celular.sistema==element
-         })
-       })
-         
+        //recorriendo el array sistemas
+        sistemas.forEach((element) => {
+          console.log(element);
+          this.anuncios = this.anuncios.filter((anuncio) => {
+            return anuncio.celular.sistema.toLowerCase() == element;
+          });
+        });
       }
-
     },
+    getUrlImagen(IDanuncio) {
+      var listRef = storage.ref().child("" + IDanuncio + "/" + IDanuncio + "");
+      //obteniendo la url
+      listRef
+        .getDownloadURL()
+        .then((url) => {
+          this.urlimagen = url;
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case "storage/object-not-found":
+              console.log("object not found");
+              break;
 
+            case "storage/unauthorized":
+              console.log("unauthorized");
+              break;
+
+            case "storage/canceled":
+              console.log("canceled");
+              break;
+
+            case "storage/unknown":
+              console.log("unknown");
+              break;
+          }
+        });
+    },
+    
+   //fin de methods
   },
-  mounted(){
-
-    eventBus.$on("filtrarAnuncio",(data)=>{
-     this.buscar=data
-     this.buscarAnuncio()
+  mounted() {
+    eventBus.$on("filtrarAnuncio", (data) => {
+      this.buscar = data;
+      this.buscarAnuncio();
     });
 
-    eventBus.$on("limpiarBuscar",()=>{
+    eventBus.$on("limpiarBuscar", () => {
       this.limpiar();
     });
 
-    eventBus.$on("filtrar",(data)=>{
+    eventBus.$on("filtrar", (data) => {
       //filtrando los anuncios
       //console.log(data)
-      this.filtrarVarios(data)
-    })
+      this.filtrarVarios(data);
+    });
 
-    eventBus.$on("filtrarNuevo",(data)=>{
+    eventBus.$on("filtrarNuevo", (data) => {
       //filtrando por nuevos
-      console.log(data)
-      this.filtrarPorNuevo(data)
-    })
-
+      console.log(data);
+      this.filtrarPorNuevo(data);
+    });
   },
   computed: {
     rows() {
       return this.anuncios.length;
     },
-    shownCards () {
-      return this.anuncios.slice((this.currentPage - 1) * this.perPage, this.currentPage * this.perPage);
-    }
+    shownCards() {
+      return this.anuncios.slice(
+        (this.currentPage - 1) * this.perPage,
+        this.currentPage * this.perPage
+      );
+    },
   },
-
+  created() {},
 };
 </script>
 
