@@ -83,12 +83,15 @@
                      {{anuncio.celular.ram}} RAM
                    
                   </b-card-text>
-
-                  <b-button href="#" variant="primary">Ver Más</b-button>
+                  <router-link :to="{ name: 'Detalles', params: { id: anuncio.id } }">
+                    <b-button variant="primary">Ver Más</b-button>
+                  </router-link>
+                  
                 </b-card>
             </b-col>
             <br /><br />
             <div class="overflow-auto">
+              <br/>
               <b-input-group>
                 <b-pagination
                   v-model="currentPage"
@@ -145,8 +148,8 @@ export default {
       options: [
         { value: null, text: "Por favor seleccione una opcion" },
         { value: 6, text: "6 articulos" },
-        { value: 9, text: "12 articulos" },
-        { value: 12, text: "18 articulos" },
+        { value: 9, text: "9 articulos" },
+        { value: 12, text: "12 articulos" },
       ],
     };
   },
@@ -318,11 +321,13 @@ export default {
           }
         });
     },
-    
+
    //fin de methods
   },
   mounted() {
     eventBus.$on("filtrarAnuncio", (data) => {
+      console.log("recibiedo datos")
+      console.log(data)
       this.buscar = data;
       this.buscarAnuncio();
     });
@@ -342,6 +347,7 @@ export default {
       console.log(data);
       this.filtrarPorNuevo(data);
     });
+    
   },
   computed: {
     rows() {
