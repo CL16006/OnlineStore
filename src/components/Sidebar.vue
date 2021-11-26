@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button v-b-toggle.sidebar-1 variant="info">Filtrar</b-button>
+    <b-button v-b-toggle.sidebar-1 variant="info"><b-icon icon="funnel"></b-icon>Filtrar</b-button>
     <b-sidebar id="sidebar-1" title="Filtrar" bg-variant="dark" text-variant="light" sidebar-class="border-right border-danger" no-header>
       <div class="p-3 border-light">
         <b-form-checkbox v-model="nuevo" name="check-button" @change="filtrarNuevo()" switch>

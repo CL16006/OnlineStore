@@ -1,15 +1,17 @@
 <template>
   <b-container fluid>
     <b-row>
-      <b-col cols="3">
+      <b-col class="col-lg-3 col-sm-0">
         <br />
+        <div class="d-none d-lg-block d-xl-block d-sm-none d-md-none">
         <sidebar></sidebar>
+        </div>
       </b-col>
-      <b-col cols="9">
+      <b-col class="col-lg-9 col-sm-12">
         <b-container>
           <br />
           <b-row>
-            <b-col class="bg-primary">
+            <b-col class="bg-primary d-none d-lg-block d-xl-block d-sm-none d-md-none">
               <br />
               <div class="input-group">
                 <label for="pMenor" class="mx-1">Precio: </label>
@@ -49,23 +51,26 @@
                 </b-button>
                 <b-button
                   variant="primary"
-                  class="mx-1"
+                  class="mx-1 d-none d-lg-block d-xl-block d-sm-none d-md-none"
                   @click="ordenarPorFecha()"
                   >
                   <b-icon icon="arrow-down-up"></b-icon>Fecha
                 </b-button>
               </b-button-toolbar>
+               <sidebar class="d-lg-none d-xl-none d-sm-inline d-md-block"></sidebar>
               <br />
             </b-col>
           </b-row>
           <b-row> </b-row>
 
-          <b-row>
+          <b-row >
             <b-col v-for="(anuncio, key) in shownCards"
               :key="key"
               cols="4"
               :per-page="perPage"
-              :current-page="currentPage">
+              :current-page="currentPage"
+              >
+              
             <br>
                 <b-card
                   title=""
@@ -74,7 +79,6 @@
                   img-top
                   tag="article"
                   style="max-width: 20rem"
-                  class="mb-2"
                   border-variant="primary"
                 >
                   <b-card-text>

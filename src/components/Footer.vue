@@ -24,20 +24,20 @@
       <div class="col-md-3 mb-md-0 mb-3 text-light">
 
         <!-- Links -->
-        <h5 class="text-uppercase">Links</h5>
+        <h5 class="text-uppercase">Mantente en contacto con nosotros</h5>
 
         <ul class="list-unstyled">
           <li>
-            <a href="#!">Link 1</a>
+            <a href="#!"><b-icon icon="github"></b-icon></a>
           </li>
           <li>
-            <a href="#!">Link 2</a>
+            <a href="#!"><b-icon icon="linkedin"></b-icon></a>
           </li>
           <li>
-            <a href="#!">Link 3</a>
+            <a href="#!"><b-icon icon="facebook"></b-icon></a>
           </li>
           <li>
-            <a href="#!">Link 4</a>
+            <a href="#!"><b-icon icon="youtube"></b-icon></a>
           </li>
         </ul>
 
@@ -48,20 +48,23 @@
       <div class="col-md-3 mb-md-0 mb-3 text-light">
 
         <!-- Links -->
-        <h5 class="text-uppercase">Links</h5>
+        <h5 class="text-uppercase">tienda cellphone</h5>
 
         <ul class="list-unstyled">
           <li>
-            <a href="#!">Link 1</a>
+            <a href="#!">Quienes somos</a>
           </li>
           <li>
-            <a href="#!">Link 2</a>
+            <a href="#!">Vision y Mision</a>
           </li>
           <li>
-            <a href="#!">Link 3</a>
+            <a href="#!">Sucursales</a>
           </li>
           <li>
-            <a href="#!">Link 4</a>
+            <a href="#!">Servicios</a>
+          </li>
+          <li>
+            <a href="#!">Historia</a>
           </li>
         </ul>
 

@@ -9,8 +9,9 @@
       Tienda Cellphone
     </b-navbar-brand>
 
-    <b-navbar-nav class="ml-auto">
-      <b-nav-form class="d-flex">
+    <b-navbar-nav class="ml-auto position-relative">
+      <b-nav-form>
+        <div class="d-lg-inline-block p2">
         <b-form-input
           @keyup="filtrar()"
           size="sm"
@@ -19,23 +20,26 @@
           placeholder="Buscar"
         >
         </b-form-input>
-
+        </div>
+        <div class="d-lg-inline-block p-2">
         <b-button
           size="sm"
           @click="limpiar()"
           class="my-2 my-sm-0 d-none d-lg-block d-xl-block d-sm-none d-md-none"
           type="submit"
           variant="primary"
-          >Limpiar</b-button
+          ><b-icon icon="trash"></b-icon>
+          Limpiar</b-button
         >
+        </div>
       </b-nav-form>
-      <b-button-group>
+      <b-button-group class="">
         <b-button
           variant="primary"
           href="/"
           class="d-none d-lg-block d-xl-block d-sm-none d-md-none"
         >
-          <b-icon icon="house-fill"></b-icon>Inicio
+          <b-icon icon="house-fill" font-scale="2"></b-icon>Inicio
         </b-button>
 
         <b-button
@@ -43,7 +47,7 @@
           href="/estadisticas"
           class="d-none d-lg-block d-xl-block d-sm-none d-md-none"
         >
-          <b-icon icon="graph-up"></b-icon>Estadisticas
+          <b-icon icon="graph-up" font-scale="2"></b-icon>Estadisticas
         </b-button>
 
         <b-button
@@ -51,7 +55,7 @@
           href="/anuncio"
           class="d-none d-lg-block d-xl-block d-sm-none d-md-none"
         >
-          <b-icon icon="plus-square-fill"></b-icon>
+          <b-icon icon="plus-square-fill" font-scale="2"></b-icon>
         </b-button>
 
         <b-button
@@ -59,7 +63,7 @@
           class="d-none d-lg-block d-xl-block d-sm-none d-md-none"
           v-b-modal.modal-1
         >
-          <b-icon icon="cart-plus-fill"></b-icon>
+          <b-icon icon="cart-plus-fill" font-scale="2"></b-icon>
           <b-badge variant="light">{{ producto }}</b-badge></b-button
         >
       </b-button-group>
