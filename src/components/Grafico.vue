@@ -25,7 +25,7 @@
                                     <span></span>iOS
                                 </span>
                                 <span class="windows-os">
-                                    <span></span>Windows
+                                    <span></span>HarmonyOS
                                 </span>
                                 <span class="android-os">
                                     <span></span>Android
