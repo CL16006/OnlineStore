@@ -3,7 +3,6 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Estadisticas from '../views/Estadisticas.vue'
 import Anuncio from '../views/Anuncio.vue'
-import Carrito from '../views/Carrito.vue'
 import About from '../views/About.vue'
 
 Vue.use(VueRouter)
@@ -23,11 +22,6 @@ const routes = [
     path: '/estadisticas',
     name:'Estadisticas',
     component: Estadisticas,
-  },
-  {
-    path:'/carrito',
-    name:'Carrito',
-    component: Carrito
   },
   {
     path:'/detalleAnuncio/{id}',

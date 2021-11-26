@@ -66,14 +66,13 @@ export default {
           { text: 'Nokia', value: 'nokia' },
           { text: 'Huawei', value: 'huawei' }
           ],
-        sistemas:[{ text: 'iOS', value: 'iOS' },
+        sistemas:[{ text: 'iOS', value: 'ios' },
           { text: 'Android', value: 'android' },
-          { text: 'EMUI 8.2', value: 'emui 8.2' },
           { text: 'HarmonyOs', value: 'harmonyOs' }
           ],
-        pantallas:[{text:'5.5 pulgadas',value:'5.5 pulgadas'},
-        {text:'6 pulgadas',value:'6 pulgadas'},
+        pantallas:[{text:'6.1 pulgadas',value:'6.1 pulgadas'},
         {text:'6.3 pulgadas',value:'6.3 pulgadas'},
+        {text:'6.4 pulgadas',value:'6.4 pulgadas'},
         {text:'6.5 pulgadas',value:'6.5 pulgadas'}
         ]
       }

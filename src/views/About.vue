@@ -19,22 +19,25 @@
             ><h2>{{ anuncio.titulo }}</h2></b-list-group-item
           >
           <b-list-group-item
-            ><p>Marca:{{ anuncio.celular.marca }}</p>
+            >Marca:{{ anuncio.celular.marca }}
             <h3>${{ anuncio.precio }}.00</h3></b-list-group-item
           >
           <b-list-group-item
-            ><b-button pill variant="outline-success">
+            ><b-button id="carrito" pill variant="outline-success" @click="agregarCarrito()">
               <b-icon icon="cart4"></b-icon>Agregar a tu carrito</b-button
             >
-            <b-button pill variant="success" v-b-modal.comprado>Comprar</b-button>
-             <b-modal id="comprado" title="Compra Realizada">
-          <p class="my-4">Gracias por su compra!</p>
-        </b-modal>
+            <b-button pill variant="success" v-b-modal.comprado
+              >Comprar</b-button
+            >
+            <b-modal id="comprado" title="Compra Realizada">
+              <p class="my-4">Gracias por su compra!</p>
+            </b-modal>
           </b-list-group-item>
           <b-list-group-item
             ><b-icon icon="calendar-check"></b-icon>Ver
             disponibilidad</b-list-group-item
           >
+
           <b-list-group-item
             ><b-icon icon="shield-lock-fill"></b-icon> Tu compra 100%
             segura</b-list-group-item
@@ -88,12 +91,14 @@
 </template>
 <script>
 import { db } from "../db";
+import { eventBus } from "../main";
 
 export default {
   data() {
     return {
       id: this.$route.params.id,
       anuncio: {},
+      toastCount: 0,
       mainProps: {
         center: true,
         blank: false,
@@ -104,7 +109,14 @@ export default {
       },
     };
   },
-  methods: {},
+  methods: {
+    agregarCarrito() {
+      
+      console.log("emitiendo el evento")
+      eventBus.$emit('carrito',this.anuncio)
+      console.log(this.anuncio);
+    },
+  },
   mounted() {
     db.collection("anuncios")
       .doc(this.id)
