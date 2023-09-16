@@ -4,8 +4,9 @@
     <h1 class="text-center">NUEVO ANUNCIO</h1>
     <b-row>
       <b-col cols="5" class="bg-dark text-light">
+        <p>Crea un nuevo anuncio para el celular que quieres vender.</p>
         <div>
-          <h3>Datos del Telefono</h3>
+          <h3>Datos del celular</h3>
           <b-form-group label="Estado">
             <b-form-radio
               @change="nuevoTrue()"
