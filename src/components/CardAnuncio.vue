@@ -4,14 +4,19 @@
       <b-col class="col-lg-3 col-sm-0">
         <br />
         <div class="d-none d-lg-block d-xl-block d-sm-none d-md-none">
-        <sidebar></sidebar>
+          <sidebar></sidebar>
         </div>
       </b-col>
       <b-col class="col-lg-9 col-sm-12">
         <b-container>
           <br />
           <b-row>
-            <b-col class="bg-primary d-none d-lg-block d-xl-block d-sm-none d-md-none">
+            <b-col
+              class="
+                bg-primary
+                d-none d-lg-block d-xl-block d-sm-none d-md-none
+              "
+            >
               <br />
               <div class="input-group">
                 <label for="pMenor" class="mx-1">Precio: </label>
@@ -31,8 +36,7 @@
                   class="mx-1"
                 ></b-form-input>
                 <b-button variant="warning" @click="limpiar()"
-                  ><b-icon icon="trash"></b-icon>
-                  Limpiar</b-button
+                  ><b-icon icon="trash"></b-icon> Limpiar</b-button
                 >
               </div>
               <br />
@@ -46,56 +50,59 @@
                   variant="primary"
                   class="mx-1"
                   @click="ordenarPorPrecio()"
-                  >
+                >
                   <b-icon icon="arrow-down-up"></b-icon>Precio
                 </b-button>
                 <b-button
                   variant="primary"
                   class="mx-1 d-none d-lg-block d-xl-block d-sm-none d-md-none"
                   @click="ordenarPorFecha()"
-                  >
+                >
                   <b-icon icon="arrow-down-up"></b-icon>Fecha
                 </b-button>
               </b-button-toolbar>
-               <sidebar class="d-lg-none d-xl-none d-sm-inline d-md-block"></sidebar>
+              <sidebar
+                class="d-lg-none d-xl-none d-sm-inline d-md-block"
+              ></sidebar>
               <br />
             </b-col>
           </b-row>
           <b-row> </b-row>
 
-          <b-row >
-            <b-col v-for="(anuncio, key) in shownCards"
+          <b-row>
+            <b-col
+              v-for="(anuncio, key) in shownCards"
               :key="key"
-              cols="4"
               :per-page="perPage"
               :current-page="currentPage"
+              :class="colSize"
+            >
+              <br />
+              <b-card
+                title=""
+                :img-src="anuncio.urlImagen"
+                img-alt="Image"
+                img-top
+                tag="article"
+                style="max-width: 20rem"
+                border-variant="primary"
               >
-              
-            <br>
-                <b-card
-                  title=""
-                  :img-src="anuncio.urlImagen"
-                  img-alt="Image"
-                  img-top
-                  tag="article"
-                  style="max-width: 20rem"
-                  border-variant="primary"
+                <b-card-text>
+                  <h2>${{ anuncio.precio }}</h2>
+                  {{ anuncio.celular.marca }}, {{ anuncio.celular.modelo }},
+                  pantalla de {{ anuncio.celular.pantalla }},
+                  {{ anuncio.celular.rom }} ROM, {{ anuncio.celular.ram }} RAM
+                </b-card-text>
+                <router-link
+                  :to="{ name: 'Detalles', params: { id: anuncio.id } }"
                 >
-                  <b-card-text>
-                   <h2>${{anuncio.precio}}</h2>
-                   {{anuncio.celular.marca}}, {{anuncio.celular.modelo}}, pantalla de {{anuncio.celular.pantalla}}, {{anuncio.celular.rom}} ROM,
-                     {{anuncio.celular.ram}} RAM
-                   
-                  </b-card-text>
-                  <router-link :to="{ name: 'Detalles', params: { id: anuncio.id } }">
-                    <b-button variant="primary">Ver Más</b-button>
-                  </router-link>
-                  
-                </b-card>
+                  <b-button variant="primary">Ver Más</b-button>
+                </router-link>
+              </b-card>
             </b-col>
             <br /><br />
             <div class="overflow-auto">
-              <br/>
+              <br />
               <b-input-group>
                 <b-pagination
                   v-model="currentPage"
@@ -155,12 +162,22 @@ export default {
         { value: 9, text: "9 articulos" },
         { value: 12, text: "12 articulos" },
       ],
+      colSize: "col-lg-4 col-sm-12",
     };
   },
   firestore: {
     anuncios: db.collection("anuncios"),
   },
   methods: {
+    actualizarColSize() {
+      if (window.innerWidth >= 992) {
+        // Pantallas grandes (lg)
+        this.colSize = "col-lg-4";
+      } else {
+        // Pantallas pequeñas (sm)
+        this.colSize = "col-sm-12";
+      }
+    },
     ordenarPorPrecio() {
       console.log("ordenar por precio");
       this.precioAsc = !this.precioAsc;
@@ -326,12 +343,19 @@ export default {
         });
     },
 
-   //fin de methods
+    //fin de methods
+  },
+  beforeDestroy() {
+    // Limpia el event listener cuando el componente se destruye
+    window.removeEventListener("resize", this.actualizarColSize);
   },
   mounted() {
+    // Detecta el cambio de tamaño de la ventana y actualiza colSize en consecuencia
+    window.addEventListener("resize", this.actualizarColSize);
+    this.actualizarColSize();
     eventBus.$on("filtrarAnuncio", (data) => {
-      console.log("recibiedo datos")
-      console.log(data)
+      console.log("recibiedo datos");
+      console.log(data);
       this.buscar = data;
       this.buscarAnuncio();
     });
@@ -351,7 +375,6 @@ export default {
       console.log(data);
       this.filtrarPorNuevo(data);
     });
-    
   },
   computed: {
     rows() {
