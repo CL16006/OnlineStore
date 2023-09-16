@@ -5,8 +5,9 @@
       class="d-none d-lg-block d-xl-block d-sm-none d-md-none"
       href="/"
     >
-      <b-icon icon="phone-fill" aria-hidden="true" font-scale="2"></b-icon>
-      Tienda Cellphone
+    <img src="@/assets/logo.png" alt="logo" style="max-width: 40px;"/>
+      
+      Cellphone Online Store
     </b-navbar-brand>
 
 

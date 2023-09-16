@@ -19,3 +19,5 @@ new Vue({
   router,
   render: h => h(App)
 }).$mount('#app')
+
+document.title = 'Cellphone Online Store';
