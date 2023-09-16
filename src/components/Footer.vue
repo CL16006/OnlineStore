@@ -12,8 +12,8 @@
       <div class="col-md-6 mt-md-0 mt-3 text-light">
 
         <!-- Content -->
-        <h5 class="text-uppercase">Proyecto final de Fundamentos de la programación en Internet</h5>
-        <p>Universidad de El Salvador. Facultad Multidisciplinaria de Occidente</p>
+        <h5 class="text-uppercase">Cellphone Online Store</h5>
+        <p>Encuentra el celular perfecto para tí.</p>
 
       </div>
       <!-- Grid column -->
