@@ -9,6 +9,7 @@
       Tienda Cellphone
     </b-navbar-brand>
 
+
     <b-navbar-nav class="ml-auto position-relative">
       <b-nav-form>
         <div class="d-lg-inline-block p2">
